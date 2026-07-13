@@ -13,7 +13,7 @@ import time
 import numpy as np
 import pandas as pd
 import lightgbm as lgb
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import joblib
 
 ROOT = __file__.replace("model\\train_model.py", "").replace("model/train_model.py", "")
@@ -139,7 +139,9 @@ def main():
 
     vl_pred = model.predict(vl_X)
     same_day_rmse = float(np.sqrt(mean_squared_error(vl_y, vl_pred)))
-    print(f"\nSame-day RMSE: {same_day_rmse:.4f}")
+    same_day_mae = float(mean_absolute_error(vl_y, vl_pred))
+    same_day_r2 = float(r2_score(vl_y, vl_pred))
+    print(f"\nSame-day RMSE: {same_day_rmse:.4f}  MAE: {same_day_mae:.4f}  R2: {same_day_r2:.4f}")
 
     # Simulate the 10-day-ahead WRMSE the same way the real submission does:
     # look up the model's same-day prediction on future days (features are
@@ -167,12 +169,15 @@ def main():
         json.dump(feature_cols, f)
     metrics = {
         "same_day_rmse": same_day_rmse,
+        "same_day_mae": same_day_mae,
+        "same_day_r2": same_day_r2,
         "wrmse_10day": wrmse,
         "per_day_rmse": per_day_rmse,
         "day_weights": DAY_WEIGHTS.tolist(),
         "n_train_rows": int(len(tr)),
         "n_valid_rows": int(len(vl)),
         "n_features": len(feature_cols),
+        "n_boosted_rounds": int(model.booster_.num_trees()),
         "top_features": feat_imp.head(15).to_dict(),
         "train_seconds": time.time() - t0,
     }
