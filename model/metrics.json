@@ -1,5 +1,7 @@
 {
   "same_day_rmse": 0.12002563013637435,
+  "same_day_mae": 0.09105730105962348,
+  "same_day_r2": 0.9994643575622734,
   "wrmse_10day": 0.08900601786592731,
   "per_day_rmse": [
     0.11996321219304729,
@@ -28,6 +30,7 @@
   "n_train_rows": 1202375,
   "n_valid_rows": 212125,
   "n_features": 112,
+  "n_boosted_rounds": 1200,
   "top_features": {
     "T2M_MAX": 9639,
     "T2M_MIN": 6821,
@@ -45,5 +48,5 @@
     "T2M_MIN_diff1": 1733,
     "temp_moisture": 1679
   },
-  "train_seconds": 189.2006254196167
+  "train_seconds": 216.93661165237427
 }
