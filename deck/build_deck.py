@@ -108,6 +108,8 @@ def build():
     add_text(s, 0.8, 2.4, 11.7, 1.2, "Forecasting Dangerous Heat", size=44, bold=True, color=WHITE)
     add_text(s, 0.8, 3.4, 11.7, 0.8,
              "10-Day Wet-Bulb Temperature Forecasting for Uttar Pradesh", size=22, color=RGBColor(0x9E, 0xC9, 0xFF))
+    add_text(s, 0.8, 4.3, 11.7, 0.5,
+             "Live demo: ather-hackathon.streamlit.app", size=17, bold=True, color=RGBColor(0x66, 0xBB, 0x6A))
     add_text(s, 0.8, 6.3, 11.7, 0.5,
              "IIIT Lucknow Climate Intelligence Challenge 2026  ·  Aether AI/ML Club", size=15, color=GREY)
 
@@ -221,8 +223,8 @@ def build():
         "Model performance panel: live WRMSE, per-horizon RMSE, and feature-importance charts.",
         "Deployed on Streamlit Community Cloud directly from GitHub — no infra to manage.",
     ])
-    add_text(s, 0.6, 5.2, 11.5, 0.5, "Live link: <INSERT STREAMLIT APP URL HERE>", size=18, bold=True, color=BLUE)
-    add_text(s, 0.6, 5.8, 11.5, 0.5, "GitHub: <INSERT REPO URL HERE>", size=18, bold=True, color=BLUE)
+    add_text(s, 0.6, 5.2, 11.5, 0.5, "Live link: https://ather-hackathon.streamlit.app/", size=18, bold=True, color=BLUE)
+    add_text(s, 0.6, 5.8, 11.5, 0.5, "GitHub: https://github.com/Laveshjadon/ATHER-HACKATHON", size=18, bold=True, color=BLUE)
 
     # ---- Slide 7: Impact ----
     s = blank_slide(prs)
