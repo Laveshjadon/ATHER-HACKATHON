@@ -36,6 +36,63 @@ LSTM + LightGBM + CatBoost ensemble, and `experiments/competition_pipeline.py`) 
 same problem — the LightGBM path in `model/` was kept for the deployed prototype because it
 trains fast on CPU and hits comparable accuracy.
 
+## Architecture
+
+```mermaid
+flowchart TD
+    subgraph Sources["Competition Data"]
+        TRAIN["data/train.csv\n1984-2014, 125 districts"]
+        CTX["data/context.csv\nlast 30 days per district"]
+        TEST["data/test.csv\n2015-2025, day_index"]
+    end
+
+    subgraph Training["model/train_model.py"]
+        FE1["Feature engineering\nStull WBT, dewpoint, vapor pressure,\nlags 1/3/7d, 7d rolling mean/std, deltas"]
+        SPLIT["Time-based train/valid split\n(85/15)"]
+        LGB["LightGBM regressor\n(same-day WBT)"]
+        MET["metrics.json\nWRMSE, per-day RMSE,\nfeature importances"]
+    end
+
+    subgraph Scoring["model/score_test.py"]
+        FE2["Same feature engineering\napplied to context+test"]
+        PRED["Predict same-day WBT\nfor every test-period day"]
+        SHIFT["Shift +1..+10 days\nper district → target_day_1..10"]
+    end
+
+    subgraph Outputs["Generated Artifacts"]
+        SUB["results/submission.csv\nKaggle format"]
+        APPDATA["app/data/predictions.parquet\n+ districts.csv"]
+        MODELFILE["model/wbt_lgbm.joblib\n+ feature_cols.json"]
+    end
+
+    subgraph Deployment["app/app.py — Streamlit"]
+        MAP["Region-wide risk map\n(Safe/Caution/Danger/Fatal)"]
+        DRILL["Per-district 10-day\nforecast chart"]
+        PERF["Model performance panel\n(WRMSE, feature importance)"]
+    end
+
+    subgraph Deliverables["Presentation"]
+        DECK["deck/build_deck.py\n→ Climate_Intelligence_Challenge_Deck.pptx"]
+        VIDEO["deck/demo_script.md\n→ demo video"]
+    end
+
+    TRAIN --> FE1 --> SPLIT --> LGB --> MET
+    LGB --> MODELFILE
+    MODELFILE --> FE2
+    CTX --> FE2
+    TEST --> FE2
+    FE2 --> PRED --> SHIFT
+    SHIFT --> SUB
+    SHIFT --> APPDATA
+    APPDATA --> MAP
+    APPDATA --> DRILL
+    MET --> PERF
+    MET --> DECK
+    APPDATA --> DECK
+    MAP --> VIDEO
+    DRILL --> VIDEO
+```
+
 ## Repo layout
 
 ```
@@ -98,3 +155,8 @@ before running `model/train_model.py`.
 - [x] Live deployment — `app/app.py`, deploy per steps above
 - [ ] Demo video — script in `deck/demo_script.md`, record screen capture of the app
 - [x] GitHub repo — this repo
+
+## Team
+
+Built by **Lavesh Jadon**, **Gaurav Jha**, and **Akash Bernwal** for the IIIT Lucknow
+Climate Intelligence Challenge 2026 (Aether).
