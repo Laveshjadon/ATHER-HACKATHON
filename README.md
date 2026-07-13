@@ -4,6 +4,8 @@ Prototype for the **IIIT Lucknow Climate Intelligence Challenge 2026** (hosted b
 the AI/ML Club of IIIT Lucknow) — 10-day-ahead Wet-Bulb Temperature (WBT) forecasting
 across 125 districts of Uttar Pradesh & neighboring regions.
 
+**Live demo:** [ather-hackathon.streamlit.app](https://ather-hackathon.streamlit.app/)
+
 ## Problem recap
 
 WBT combines temperature and humidity into a single heat-stress signal:
