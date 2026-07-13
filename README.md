@@ -39,58 +39,18 @@ trains fast on CPU and hits comparable accuracy.
 ## Architecture
 
 ```mermaid
-flowchart TD
-    subgraph Sources["Competition Data"]
-        TRAIN["data/train.csv\n1984-2014, 125 districts"]
-        CTX["data/context.csv\nlast 30 days per district"]
-        TEST["data/test.csv\n2015-2025, day_index"]
-    end
+flowchart LR
+    A["Training data\n(train.csv, 1984-2014)"] --> B["Feature engineering\n(lags, rolling stats,\npsychrometric features)"]
+    B --> C["LightGBM model\n(same-day WBT)"]
+    C --> D["Trained model\n+ metrics"]
 
-    subgraph Training["model/train_model.py"]
-        FE1["Feature engineering\nStull WBT, dewpoint, vapor pressure,\nlags 1/3/7d, 7d rolling mean/std, deltas"]
-        SPLIT["Time-based train/valid split\n(85/15)"]
-        LGB["LightGBM regressor\n(same-day WBT)"]
-        MET["metrics.json\nWRMSE, per-day RMSE,\nfeature importances"]
-    end
+    E["Context + test data\n(2015-2025)"] --> F["Score every day\n+ shift 10-day targets"]
+    D --> F
+    F --> G["submission.csv"]
+    F --> H["Streamlit dashboard"]
 
-    subgraph Scoring["model/score_test.py"]
-        FE2["Same feature engineering\napplied to context+test"]
-        PRED["Predict same-day WBT\nfor every test-period day"]
-        SHIFT["Shift +1..+10 days\nper district → target_day_1..10"]
-    end
-
-    subgraph Outputs["Generated Artifacts"]
-        SUB["results/submission.csv\nKaggle format"]
-        APPDATA["app/data/predictions.parquet\n+ districts.csv"]
-        MODELFILE["model/wbt_lgbm.joblib\n+ feature_cols.json"]
-    end
-
-    subgraph Deployment["app/app.py — Streamlit"]
-        MAP["Region-wide risk map\n(Safe/Caution/Danger/Fatal)"]
-        DRILL["Per-district 10-day\nforecast chart"]
-        PERF["Model performance panel\n(WRMSE, feature importance)"]
-    end
-
-    subgraph Deliverables["Presentation"]
-        DECK["deck/build_deck.py\n→ Climate_Intelligence_Challenge_Deck.pptx"]
-        VIDEO["deck/demo_script.md\n→ demo video"]
-    end
-
-    TRAIN --> FE1 --> SPLIT --> LGB --> MET
-    LGB --> MODELFILE
-    MODELFILE --> FE2
-    CTX --> FE2
-    TEST --> FE2
-    FE2 --> PRED --> SHIFT
-    SHIFT --> SUB
-    SHIFT --> APPDATA
-    APPDATA --> MAP
-    APPDATA --> DRILL
-    MET --> PERF
-    MET --> DECK
-    APPDATA --> DECK
-    MAP --> VIDEO
-    DRILL --> VIDEO
+    D --> I["Presentation deck\n+ demo video"]
+    H --> I
 ```
 
 ## Repo layout
