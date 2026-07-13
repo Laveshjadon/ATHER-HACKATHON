@@ -66,32 +66,6 @@ streamlit run app/app.py    # opens the dashboard at http://localhost:8501
 download it from the competition's Kaggle dataset page and place it at `data/train.csv`
 before running `model/train_model.py`.
 
-## Deploying the live demo (Streamlit Community Cloud, free)
-
-1. Push this repo to GitHub (`data/train.csv` is excluded via `.gitignore` — see above).
-   Only `app/data/predictions.parquet` and `app/data/districts.csv` are actually needed
-   for the deployed app.
-2. Go to [share.streamlit.io](https://share.streamlit.io), sign in with GitHub, click
-   "New app", pick this repo, set the main file path to `app/app.py`.
-3. Streamlit Cloud installs `app/requirements.txt` automatically and gives you a public
-   `*.streamlit.app` URL — that's the "Live Deployment Link" deliverable.
-
-## What the dashboard shows
-
-- **Region-wide risk map** — all 125 districts plotted by relative coordinates, color-coded
-  Safe/Caution/Danger/Fatal for any day in the 2015–2025 test window (slider).
-- **Per-district 10-day forecast** — line chart with the WBT danger bands overlaid, plus
-  peak/day-1/day-10 metrics and a risk badge.
-- **Model performance panel** — validation WRMSE, per-horizon RMSE bar chart (showing the
-  weighted-scoring priority on near-term accuracy), and top feature importances.
-
-## Deliverables checklist
-
-- [x] Presentation deck — see `deck/` (generate with `deck/build_deck.py`)
-- [x] Live deployment — `app/app.py`, deploy per steps above
-- [ ] Demo video — script in `deck/demo_script.md`, record screen capture of the app
-- [x] GitHub repo — this repo
-
 ## Team
 
 Built by **Lavesh Jadon**, **Gaurav Jha**, and **Akash Bernwal** for the IIIT Lucknow
